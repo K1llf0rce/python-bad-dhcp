@@ -40,15 +40,14 @@ def get_new_lease(macAddr, interface, timeoutInSeconds: int):
     try:
         server_mac = offer[0]["Ether"].src
         bootp_reply = offer[0]["BOOTP"]
-        server_ip = bootp_reply.siaddr
         request_ip = bootp_reply.yiaddr
     except:
         print("No Offer within timeout limit")
         return
+    bytes_requested_options = struct.pack("17B", 1,2,6,12,15,26,28,121,3,33,40,41,42,119,249,252,17)
     pkt = Ether(dst='ff:ff:ff:ff:ff:ff', src=macAddr, type=0x0800) / IP(src='0.0.0.0', dst='255.255.255.255') / \
         UDP(dport=67, sport=68) / BOOTP(op=1, chaddr=macAddr) / \
-        DHCP(options=[('message-type', 'request'), ("client_id", macAddr), ("requested_addr", request_ip),
-                            ("server_id", server_ip), 'end'])
+        DHCP(options=[('message-type', 'request'), ("client_id", macAddr), ("requested_addr", request_ip), ('param_req_list', 1,2,6,12,15,26,28,121,3,33,40,41,42,119,249,252,17), ('hostname', 'test'), ('max_dhcp_mesg_size', 576), 'end'])
     sendp(pkt, iface=localiface, verbose=0)
 
 # start here

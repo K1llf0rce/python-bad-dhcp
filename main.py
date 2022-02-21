@@ -6,6 +6,8 @@ import os
 import sys
 import random
 import argparse
+import keyboard
+
 if not os.geteuid() == 0:
     sys.exit("\nOnly root can run this script\n")
 
@@ -53,3 +55,6 @@ def get_new_lease(macAddr, interface, timeoutInSeconds: int):
 if __name__ == "__main__":
     for i in range(args.number):
         get_new_lease(get_random_MAC(),args.interface, args.timeout)
+        if keyboard.on_press('q'):
+            print("Aborted by user.")
+            break

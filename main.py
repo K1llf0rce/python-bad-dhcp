@@ -5,6 +5,7 @@ import socket
 import os
 import sys
 import random
+import string
 import argparse
 import keyboard
 
@@ -20,8 +21,22 @@ args = parser.parse_args()
 
 # generate random MAC
 def get_random_MAC():
-    genMAC = f"{random.randint(1,9)}{random.randint(1,9)}:{random.randint(1,9)}{random.randint(1,9)}:{random.randint(1,9)}{random.randint(1,9)}:{random.randint(1,9)}{random.randint(1,9)}:{random.randint(1,9)}{random.randint(1,9)}:{random.randint(1,9)}{random.randint(1,9)}"
-    return genMAC
+    gen_MAC = f'{random.randint(1,9)}{random.randint(1,9)}:' \
+        + f'{random.randint(1,9)}{random.randint(1,9)}:' \
+        + f'{random.randint(1,9)}{random.randint(1,9)}:' \
+        + f'{random.randint(1,9)}{random.randint(1,9)}:' \
+        + f'{random.randint(1,9)}{random.randint(1,9)}:' \
+        + f'{random.randint(1,9)}{random.randint(1,9)}'
+    return gen_MAC
+
+# generate random hostname
+def get_random_hostname():
+    gen_host = f"{random.choice(string.ascii_letters)}" \
+        + f"{random.choice(string.ascii_letters)}" \
+        + f"{random.choice(string.ascii_letters)}" \
+        + f"{random.choice(string.ascii_letters)}" \
+        + f"{random.choice(string.ascii_letters)}"
+    return gen_host
 
 # get new lease
 def get_new_lease(macAddr, interface, timeoutInSeconds: int):
@@ -40,7 +55,7 @@ def get_new_lease(macAddr, interface, timeoutInSeconds: int):
         return
     pkt = Ether(dst='ff:ff:ff:ff:ff:ff', src=macAddr, type=0x0800) / IP(src='0.0.0.0', dst='255.255.255.255') / \
         UDP(dport=67, sport=68) / BOOTP(op=1, chaddr=macAddr) / \
-        DHCP(options=[('message-type', 'request'), ("client_id", macAddr), ("requested_addr", request_ip), ('param_req_list', 1,2,6,12,15,26,28,121,3,33,40,41,42,119,249,252,17), ('hostname', 'test'), ('max_dhcp_mesg_size', 576), 'end'])
+        DHCP(options=[('message-type', 'request'), ("client_id", macAddr), ("requested_addr", request_ip), ('param_req_list', 1,2,6,12,15,26,28,121,3,33,40,41,42,119,249,252,17), ('hostname', get_random_hostname()), ('max_dhcp_mesg_size', 576), 'end'])
     sendp(pkt, iface=interface, verbose=0)
 
 # start here

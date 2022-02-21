@@ -2,10 +2,12 @@
 ---
 ### python program to attack dhcp.
 ---
-currently working: starvation\
-to be added: rogue dhcp server
-
-#### Usage:
-1. run main.py as root
-2. follow instructions provided by shell
-3. have fun i guess
+## Usage:
+```
+# Run as root!
+sudo ./ main.py [-h] -i INTERFACE -t TIMEOUT -n NUMBER
+```
+## Currently working: 
+- Starvation
+## To be added: 
+- Rogue DHCP-Server

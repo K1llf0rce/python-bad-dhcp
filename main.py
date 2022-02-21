@@ -55,6 +55,6 @@ def get_new_lease(macAddr, interface, timeoutInSeconds: int):
 if __name__ == "__main__":
     for i in range(args.number):
         get_new_lease(get_random_MAC(),args.interface, args.timeout)
-        if keyboard.on_press('q'):
+        if keyboard.is_pressed('q'):
             print("Aborted by user.")
             break

@@ -55,7 +55,7 @@ def get_new_lease(macAddr, interface, timeoutInSeconds: int):
         return
     pkt = Ether(dst='ff:ff:ff:ff:ff:ff', src=macAddr, type=0x0800) / IP(src='0.0.0.0', dst='255.255.255.255') / \
         UDP(dport=67, sport=68) / BOOTP(op=1, chaddr=macAddr) / \
-        DHCP(options=[('message-type', 'request'), ("client_id", macAddr), ("requested_addr", request_ip), ('param_req_list', 1,2,6,12,15,26,28,121,3,33,40,41,42,119,249,252,17), ('hostname', get_random_hostname()), ('max_dhcp_mesg_size', 576), 'end'])
+        DHCP(options=[('message-type', 'request'), ("client_id", macAddr), ("requested_addr", request_ip), ('param_req_list', 1,2,6,12,15,26,28,121,3,33,40,41,42,119,249,252,17), ('hostname', get_random_hostname()), 'end'])
     sendp(pkt, iface=interface, verbose=0)
 
 # start here

@@ -25,16 +25,10 @@ def get_random_MAC():
 
 # get new lease
 def get_new_lease(macAddr, interface, timeoutInSeconds: int):
-    localiface = interface
-    requestMAC = macAddr
-    myhostname='vektor'
-    localmac = get_if_hwaddr(localiface)
-    localmacraw = requestMAC.replace(':','')
-
     pkt = Ether(dst='ff:ff:ff:ff:ff:ff', src=macAddr, type=0x0800) / IP(src='0.0.0.0', dst='255.255.255.255') / \
         UDP(dport=67, sport=68) / BOOTP(op=1, chaddr=macAddr) / DHCP(options=[('message-type', 'discover'), 'end'])
-    sendp(pkt, iface=localiface, verbose=0)
-    offer = sniff(iface=localiface, filter="port 68 and port 67",
+    sendp(pkt, iface=interface, verbose=0)
+    offer = sniff(iface=interface, filter="port 68 and port 67",
                 stop_filter=lambda pkt: BOOTP in pkt and pkt[BOOTP].op == 2 and pkt[DHCP].options[0][1] == 2,
                 timeout=timeoutInSeconds)
     try:
@@ -44,11 +38,10 @@ def get_new_lease(macAddr, interface, timeoutInSeconds: int):
     except:
         print("No Offer within timeout limit")
         return
-    bytes_requested_options = struct.pack("17B", 1,2,6,12,15,26,28,121,3,33,40,41,42,119,249,252,17)
     pkt = Ether(dst='ff:ff:ff:ff:ff:ff', src=macAddr, type=0x0800) / IP(src='0.0.0.0', dst='255.255.255.255') / \
         UDP(dport=67, sport=68) / BOOTP(op=1, chaddr=macAddr) / \
         DHCP(options=[('message-type', 'request'), ("client_id", macAddr), ("requested_addr", request_ip), ('param_req_list', 1,2,6,12,15,26,28,121,3,33,40,41,42,119,249,252,17), ('hostname', 'test'), ('max_dhcp_mesg_size', 576), 'end'])
-    sendp(pkt, iface=localiface, verbose=0)
+    sendp(pkt, iface=interface, verbose=0)
 
 # start here
 if __name__ == "__main__":

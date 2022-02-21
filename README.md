@@ -5,7 +5,7 @@
 ## Usage:
 ```
 # Run as root!
-sudo ./ main.py [-h] -i INTERFACE -t TIMEOUT -n NUMBER
+sudo ./main.py [-h] [-v] -i INTERFACE -t TIMEOUT -n NUMBER
 ```
 ## Currently working: 
 - Starvation
